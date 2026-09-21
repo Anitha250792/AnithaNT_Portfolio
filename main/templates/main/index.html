@@ -1,0 +1,246 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- ============ HERO ============ -->
+<section id="home" class="hero" data-topic="intro">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7 order-2 order-lg-1">
+        <div class="hero-copy" data-say="{{ intro_say }}">
+          <h1 class="hero-title">Hi, I'm {{ profile.first_name }}</h1>
+          <p class="hero-role" aria-live="off"><span id="typed">{{ profile.roles.0 }}</span><span class="caret" aria-hidden="true"></span></p>
+          <p class="hero-tagline">{{ profile.tagline }}</p>
+        </div>
+
+        <div class="hero-actions">
+          <button type="button" class="btn btn-glow btn-lg" data-listen="intro"><i class="fa-solid fa-volume-high"></i> Hear the intro</button>
+          <a class="btn btn-ghost btn-lg" href="#projects">View projects</a>
+          <a class="btn btn-ghost btn-lg" href="{% static cv_path %}" download><i class="fa-solid fa-download"></i> Download CV</a>
+        </div>
+
+        <ul class="social-row" aria-label="Social links">
+          {% for s in socials %}
+          <li><a href="{{ s.url }}" target="_blank" rel="noopener" aria-label="{{ s.label }}"><i class="{{ s.icon }}"></i></a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="col-lg-5 order-1 order-lg-2 d-flex justify-content-center">
+        <div class="avatar">
+          <span class="avatar-ring" aria-hidden="true"></span>
+          <img src="{% static 'main/images/professional-dp.png' %}" alt="Portrait of {{ profile.first_name }}" width="400" height="400">
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ profile.roles|json_script:"roles-data" }}
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about" class="section" data-topic="about">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title" data-say="">About Me</h2>
+      <button type="button" class="listen-btn" data-listen="about" aria-label="Listen to the About section"><i class="fa-solid fa-volume-high"></i> Listen</button>
+    </div>
+
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        {% for paragraph in about %}
+        <p class="about-copy reveal" data-say="">{{ paragraph }}</p>
+        {% endfor %}
+      </div>
+      <div class="col-lg-5 d-flex justify-content-center">
+        <figure class="about-photo reveal">
+          <img src="{% static 'main/images/Ani-dp.png' %}" alt="{{ profile.first_name }} smiling" loading="lazy" width="750" height="1000">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SKILLS ============ -->
+<section id="skills" class="section" data-topic="skills">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title" data-say="">Technical Skills</h2>
+      <button type="button" class="listen-btn" data-listen="skills" aria-label="Listen to the Skills section"><i class="fa-solid fa-volume-high"></i> Listen</button>
+    </div>
+
+    <div class="skill-grid">
+      {% for group in skills %}
+      <article class="skill-card accent-{{ group.accent }} reveal" data-say="{{ group.say }}">
+        <div class="skill-icon"><i class="fa-solid {{ group.icon }}"></i></div>
+        <h3>{{ group.title }}</h3>
+        <ul class="chips">
+          {% for item in group.items %}<li>{{ item }}</li>{% endfor %}
+        </ul>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS ============ -->
+<section id="projects" class="section" data-topic="projects">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title" data-say="">Projects</h2>
+      <button type="button" class="listen-btn" data-listen="projects" aria-label="Listen to the Projects section"><i class="fa-solid fa-volume-high"></i> Listen</button>
+    </div>
+
+    <h3 class="sub-title" data-say="">Project experience</h3>
+    <div class="exp-grid">
+      {% for e in experience %}
+      <article class="exp-card accent-{{ e.accent }}{% if e.featured %} is-featured{% endif %} reveal" data-say="{{ e.say }}">
+        <h4>{{ e.title }}{% if e.alias %} <span class="badge-alias">{{ e.alias }}</span>{% endif %}</h4>
+        <ul class="tick-list">
+          {% for point in e.points %}<li>{{ point }}</li>{% endfor %}
+        </ul>
+        <div class="tech">
+          <span class="tech-label">Technologies</span>
+          <ul class="tech-list">{% for tech in e.tech %}<li>{{ tech }}</li>{% endfor %}</ul>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="more-link reveal">
+      <a class="btn btn-ghost" href="https://github.com/Anitha250792" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> More on GitHub</a>
+    </p>
+
+    {% if projects %}
+    <h3 class="sub-title" data-say="Web project gallery. It includes {{ projects|length }} live project{{ projects|length|pluralize }}, such as {% for p in projects|slice:':6' %}{{ p.title }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if projects|length > 6 %}, and more{% endif %}.">Web project gallery</h3>
+    <div class="console reveal" aria-hidden="true">
+      <div class="console-bar">
+        <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+        <span class="console-title">anitha@portfolio: ~/projects</span>
+        <span class="console-live"><i></i> running</span>
+      </div>
+      <div class="console-grid">
+        <div class="console-body" id="console-body"></div>
+        <div class="console-stats">
+          <div class="stat"><strong class="stat-num" data-count="{{ console_data.count }}">{{ console_data.count }}</strong><span>Projects</span></div>
+          <div class="stat"><strong class="stat-num" data-count="{{ console_data.hosts|length }}">{{ console_data.hosts|length }}</strong><span>Platforms</span></div>
+        </div>
+      </div>
+    </div>
+    {{ console_data|json_script:"console-data" }}
+
+    <div class="gallery-grid">
+      {% for p in projects %}
+      <article class="gallery-card reveal"{% if p.description %} data-say="{{ p.title }}. {{ p.description|truncatechars:220 }}"{% endif %}>
+        <div class="gallery-thumb"><img src="{{ p.image.url }}" alt="{{ p.title }} preview" loading="lazy"></div>
+        <div class="gallery-body">
+          <h4>{{ p.title }}</h4>
+          {% if p.description %}<p>{{ p.description|truncatechars:120 }}</p>{% endif %}
+          {% if p.link %}<a class="btn btn-ghost btn-sm" href="{{ p.link }}" target="_blank" rel="noopener">View project <i class="fa-solid fa-arrow-up-right-from-square"></i></a>{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ============ JOURNEY ============ -->
+<section id="journey" class="section" data-topic="journey">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title" data-say="Education and journey">Education &amp; Journey</h2>
+      <button type="button" class="listen-btn" data-listen="journey" aria-label="Listen to the Education and Journey section"><i class="fa-solid fa-volume-high"></i> Listen</button>
+    </div>
+
+    <ol class="timeline">
+      {% for step in journey %}
+      <li class="tl-item accent-{{ step.accent }} reveal" data-say="{{ step.say }}">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <div class="tl-card">
+          <span class="tl-year">{{ step.year }}</span>
+          <h3>{{ step.title }}</h3>
+          {% if step.meta %}<p class="tl-meta">{{ step.meta }}</p>{% endif %}
+          {% if step.text %}<p class="tl-text">{{ step.text }}</p>{% endif %}
+          {% if step.points %}<ul class="tick-list">{% for point in step.points %}<li>{{ point }}</li>{% endfor %}</ul>{% endif %}
+          {% if step.chips %}<ul class="chips">{% for chip in step.chips %}<li>{{ chip }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<!-- ============ RESUME ============ -->
+<section id="resume" class="section section-tight" data-topic="journey">
+  <div class="container">
+    <div class="resume-band reveal" data-say="{{ resume_say }}">
+      <div>
+        <h2 class="resume-title">Resume</h2>
+        <p class="resume-text">Education, skills and projects in one PDF.</p>
+        <ul class="chips">
+          {% for l in languages %}<li>{{ l }}</li>{% endfor %}
+          {% for s in strengths %}<li>{{ s }}</li>{% endfor %}
+        </ul>
+      </div>
+      <a class="btn btn-glow btn-lg" href="{% static cv_path %}" download><i class="fa-solid fa-download"></i> Download CV</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="section" data-topic="contact">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title" data-say="Contact">Get in Touch</h2>
+      <button type="button" class="listen-btn" data-listen="contact" aria-label="Listen to the Contact section"><i class="fa-solid fa-volume-high"></i> Listen</button>
+    </div>
+
+    <div class="row g-5">
+      <div class="col-lg-5">
+        <ul class="contact-list reveal" data-say="{{ contact_say }}">
+          {% for c in contacts %}
+          <li>
+            <span class="contact-icon"><i class="{{ c.icon }}"></i></span>
+            <span class="contact-text"><small>{{ c.label }}</small>
+              {% if c.url %}<a href="{{ c.url }}"{% if c.url|slice:":4" == "http" %} target="_blank" rel="noopener"{% endif %}>{{ c.value }}</a>{% else %}<span>{{ c.value }}</span>{% endif %}
+            </span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="contact-card reveal">
+          <p class="contact-lead">Interested in working together, or have a question? Send a message and I'll respond as soon as possible.</p>
+
+          {% for message in messages %}
+          <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}" role="status">{{ message }}</div>
+          {% endfor %}
+
+          <form method="post" action="{% url 'contact' %}" novalidate>
+            {% csrf_token %}
+            <div class="hp" aria-hidden="true">{{ form.website }}</div>
+            <div class="mb-3">
+              <label class="visually-hidden" for="{{ form.name.id_for_label }}">Name</label>
+              {{ form.name }}
+              {% for error in form.name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+              <label class="visually-hidden" for="{{ form.email.id_for_label }}">Email</label>
+              {{ form.email }}
+              {% for error in form.email.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+              <label class="visually-hidden" for="{{ form.message.id_for_label }}">Message</label>
+              {{ form.message }}
+              {% for error in form.message.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+            </div>
+            <button type="submit" class="btn btn-glow w-100"><i class="fa-solid fa-paper-plane"></i> Send message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

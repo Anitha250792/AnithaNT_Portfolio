@@ -1,0 +1,36 @@
+.env
+db.sqlite3
+__pycache__/
+*.pyc
+venv/
+.venv/
+staticfiles/*
+!staticfiles/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# Django
+db.sqlite3
+staticfiles/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python cache
+.pytest_cache/
